@@ -123,10 +123,6 @@ Ensure all paths in these configuration files are updated to reflect your local 
 
 This project is based on concepts from **"Neural Networks from Scratch in Python"**. The book provided foundational understanding of neural networks, and this implementation applies those principles in C++.
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
 ---
 
 Feel free to reach out if you have any questions or need further assistance!
