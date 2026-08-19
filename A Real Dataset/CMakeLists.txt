@@ -1,44 +1,57 @@
-cmake_minimum_required(VERSION 3.1)
-project(ARealDataset)
+cmake_minimum_required(VERSION 3.16)
 
-set(CMAKE_WIN32_EXECUTABLE OFF)
+project(RealDatasetExamples LANGUAGES CXX)
 
-# Set OpenCV path
-set(OpenCV_DIR "C:/OpenCV-MinGW-Build-OpenCV-4.5.5-x64/x64/mingw/lib")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Include directories
-include_directories(
-    ${OpenCV_DIR}/include
-    "C:/Program Files/WindowsApps/PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0/Include"
-    "C:/users/lenovo/appdata/local/packages/pythonsoftwarefoundation.python.3.9_qbz5n2kfra8p0/localcache/local-packages/python39/site-packages/numpy/_core/include"
-    "F:/Codes/Neural Networks From Scratch/Github Repo/cereal-1.3.2/include"
-)
+find_package(OpenCV QUIET)
+find_package(OpenMP QUIET)
 
-link_directories(
-    "C:/Program Files/WindowsApps/PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0/libs"
-)
+if(NOT OpenCV_FOUND)
 
-# Find OpenMP
-find_package(OpenMP REQUIRED)
+    message(
+        WARNING
+        "OpenCV not found; real dataset executable targets are not available."
+    )
 
-# Default source file
-set(SOURCE_FILE "main.cpp")
+    return()
 
-# Allow overriding the source file with a command line argument
-if(DEFINED SOURCE_FILE_ARG)
-    set(SOURCE_FILE ${SOURCE_FILE_ARG})
 endif()
 
-# Add executable
-add_executable(MyProject ${SOURCE_FILE})
-
-# Find OpenCV
-find_package(OpenCV REQUIRED)
-
-# Link OpenCV and Python libraries
-target_link_libraries(MyProject PUBLIC OpenMP::OpenMP_CXX ${OpenCV_LIBS} Python39)  # Adjust Python version as necessary
-
-# Set additional compiler options
-set_target_properties(MyProject PROPERTIES
-    COMPILE_FLAGS "-Ofast -march=native -ftree-vectorize -flto -fopenmp -funroll-loops -fomit-frame-pointer"
+set(SOURCES
+    main
+    predictions
+    loading_and_testing_params
 )
+
+foreach(example IN LISTS SOURCES)
+
+    add_executable(
+        ${example}
+        "${example}.cpp"
+    )
+
+    target_include_directories(
+        ${example}
+        PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../Neural-Networks-From-Scratch-in-CPP"
+        ${OpenCV_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(
+        ${example}
+        PRIVATE
+        ${OpenCV_LIBS}
+    )
+
+    if(OpenMP_CXX_FOUND)
+        target_link_libraries(
+            ${example}
+            PRIVATE
+            OpenMP::OpenMP_CXX
+        )
+    endif()
+
+endforeach()

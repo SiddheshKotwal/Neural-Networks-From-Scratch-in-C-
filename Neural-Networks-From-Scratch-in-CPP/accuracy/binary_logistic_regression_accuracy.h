@@ -12,6 +12,9 @@
 #include <numeric>
 #include <random>
 #include <omp.h>
+
+#include "calculate_accuracy.h"
+
 using namespace std;
 
 class Accuracy_Logistic_Regression : public Accuracy{

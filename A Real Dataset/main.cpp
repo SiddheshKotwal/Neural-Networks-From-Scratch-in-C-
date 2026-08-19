@@ -1,5 +1,16 @@
-#include "F:\Codes\Neural Networks From Scratch\Github Repo\Neural-Networks-From-Scratch-in-CPP\common_includes.h"
-#include <opencv2/opencv.hpp>
+#include "../Neural-Networks-From-Scratch-in-CPP/common_includes.h"
+
+#if defined(__has_include)
+#  if __has_include(<opencv2/opencv.hpp>)
+#    define NN_HAS_OPENCV 1
+#    include <opencv2/opencv.hpp>
+#  endif
+#endif
+
+#ifndef NN_HAS_OPENCV
+#  define NN_HAS_OPENCV 0
+#endif
+
 #include "get_dataset.cpp"
 #include "get_set_params.cpp"
 
@@ -21,6 +32,7 @@
 // ./run_my_plot (incase of use of matplotlibcpp) or
 // ./MyProgram.exe
 
+#if NN_HAS_OPENCV
 int main() {
 
     vector<vector<vector<double>>> X, X_test;
@@ -29,7 +41,7 @@ int main() {
     vector<double> y, y_test, temp, y_shuffled;
 
     // Data Loading
-    create_data_mnist(X, X_test, y, y_test, "F:\\Codes\\Neural Networks From Scratch\\Github Repo\\A Real Dataset\\fashion_mnist_images\\");
+    create_data_mnist(X, X_test, y, y_test, "../A Real Dataset/fashion_mnist_images/");
     
     cout <<"\nTraining Set: " << X.size() << " " << X[0].size() << " " << X[0][0].size() << "\n";
     cout<<y.size()<<"\n";
@@ -222,7 +234,7 @@ int main() {
     layer_params.push_back(dense3);
 
     vector<tuple<vector<vector<double>>, vector<vector<double>>>> parameters = get_parameters(layer_params);
-    save_parameters(parameters, "F:/Codes/Neural Networks From Scratch/Github Repo/A Real Dataset/fashion_mnist.parms");
+    save_parameters(parameters, "../A Real Dataset/fashion_mnist.parms");
     cout<<"parameters saved successfully!\n";
 
     // With saved weights, we can, for example, initialize a model with those weights, trained from similar data, and then train that
@@ -239,3 +251,15 @@ int main() {
 
     return 0;
 }
+
+#else
+
+int main() {
+    std::cerr
+        << "OpenCV is not installed; "
+        << "this example is disabled.\n";
+
+    return 0;
+}
+
+#endif

@@ -1,5 +1,21 @@
 #pragma once
 
+// matplotlib-cpp is optional. The neural-network implementation can be
+// compiled without the Python/NumPy development headers. In that case,
+// plotting functions become no-ops.
+
+#if defined(__has_include)
+#  if __has_include(<Python.h>) && __has_include(<numpy/arrayobject.h>)
+#    define MATPLOTLIBCPP_HAS_PYTHON 1
+#  endif
+#endif
+
+#ifndef MATPLOTLIBCPP_HAS_PYTHON
+#  define MATPLOTLIBCPP_HAS_PYTHON 0
+#endif
+
+#if MATPLOTLIBCPP_HAS_PYTHON
+
 // Python headers must be included before any system headers, since
 // they define _POSIX_C_SOURCE
 #include <Python.h>
@@ -2984,3 +3000,28 @@ private:
 };
 
 } // end namespace matplotlibcpp
+
+#else
+
+namespace matplotlibcpp {
+
+// These fallback functions allow the neural-network examples and headers
+// to compile when the optional Python/NumPy development environment is
+// unavailable. When Python/NumPy are available, the full matplotlib-cpp
+// implementation above is used instead.
+
+template <typename... Args>
+inline void plot(Args&&...) {}
+
+template <typename... Args>
+inline void scatter_colored(Args&&...) {}
+
+template <typename... Args>
+inline void imshow(Args&&...) {}
+
+template <typename... Args>
+inline void show(Args&&...) {}
+
+} // namespace matplotlibcpp
+
+#endif // MATPLOTLIBCPP_HAS_PYTHON

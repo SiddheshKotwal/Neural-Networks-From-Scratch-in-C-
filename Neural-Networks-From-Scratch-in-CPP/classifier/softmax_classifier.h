@@ -12,6 +12,10 @@
 #include <numeric>
 #include <random>
 #include <omp.h>
+
+#include "../activation_functions/Softmax.h"
+#include "../loss_functions/categorical_cross_entropy.h"
+
 using namespace std;
 
 class Activation_Softmax_Loss_CategoricalCrossentropy{

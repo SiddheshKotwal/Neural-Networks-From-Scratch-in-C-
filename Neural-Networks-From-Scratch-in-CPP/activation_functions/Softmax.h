@@ -12,6 +12,9 @@
 #include <numeric>
 #include <random>
 #include <omp.h>
+
+#include "../math_operations/numpy_operations.h"
+
 using namespace std;
 
 // Theory:

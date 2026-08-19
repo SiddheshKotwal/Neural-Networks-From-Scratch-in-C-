@@ -1,5 +1,16 @@
-#include "F:\Codes\Neural Networks From Scratch\Github Repo\Neural-Networks-From-Scratch-in-CPP\common_includes.h"
-#include <opencv2/opencv.hpp>
+#include "../Neural-Networks-From-Scratch-in-CPP/common_includes.h"
+
+#if defined(__has_include)
+#  if __has_include(<opencv2/opencv.hpp>)
+#    define NN_HAS_OPENCV 1
+#    include <opencv2/opencv.hpp>
+#  endif
+#endif
+
+#ifndef NN_HAS_OPENCV
+#  define NN_HAS_OPENCV 0
+#endif
+
 #include "get_dataset.cpp"
 #include "get_set_params.cpp"
 
@@ -11,6 +22,7 @@
 // While we can save and load model parameter values, we still need to define the model. It must be
 // the exact configuration as the model that we’re importing parameters from
 
+#if NN_HAS_OPENCV
 int main(){
 
     vector<vector<vector<double>>> X_test, X;
@@ -18,7 +30,7 @@ int main(){
     vector<double> y_test, temp, y;
 
     // Data Loading
-    create_data_mnist(X, X_test, y, y_test, "F:\\Codes\\Neural Networks From Scratch\\Github Repo\\A Real Dataset\\fashion_mnist_images\\");
+    create_data_mnist(X, X_test, y, y_test, "../A Real Dataset/fashion_mnist_images/");
 
     for(int i = 0; i < X_test.size(); i++){
         temp.clear();
@@ -45,7 +57,7 @@ int main(){
     layer_params.push_back(&dense3);
 
     vector<tuple<vector<vector<double>>, vector<vector<double>>>> parameters;
-    load_parameters(parameters, "F:/Codes/Neural Networks From Scratch/Github Repo/A Real Dataset/fashion_mnist.parms");
+    load_parameters(parameters, "../A Real Dataset/fashion_mnist.parms");
     set_parameters(layer_params, parameters);
     cout<<"parameters loaded successfully!\n";
 
@@ -61,7 +73,17 @@ int main(){
     double validation_accuracy, validation_loss;
     for(long long j = 0; j < validation_steps; j++){
         
-        long long k = 0, new_batch_start = batch_size * j, new_batch_end = batch_size * (j + 1);
+        long long new_batch_start = batch_size * j;
+        long long new_batch_end = std::min(
+            batch_size * (j + 1),
+            static_cast<long long>(X_test_reshaped.size())
+        );
+
+        long long current_batch_size = new_batch_end - new_batch_start;
+        batch_X.resize(current_batch_size, vector<double>(X_test_reshaped[0].size()));
+        batch_y.resize(current_batch_size);
+
+        long long k = 0;
         for(long long start = new_batch_start; start < new_batch_end; start++){
             batch_X[k] = X_test_reshaped[start];
             batch_y[k++] = y_test[start];
@@ -83,4 +105,17 @@ int main(){
     // Averaged out loss and accuracy from above validation steps
     cout<<"validation"<<", acc: "<<validation_accuracy<<", loss: "<<validation_loss<<"\n";
 
+    return 0;
 }
+
+#else
+
+int main() {
+    std::cerr
+        << "OpenCV is not installed; "
+        << "this example is disabled.\n";
+
+    return 0;
+}
+
+#endif

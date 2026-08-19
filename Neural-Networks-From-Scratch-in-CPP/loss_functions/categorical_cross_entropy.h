@@ -12,6 +12,9 @@
 #include <numeric>
 #include <random>
 #include <omp.h>
+
+#include "loss_functions.h"
+
 using namespace std;
 
 class CategoricalCrossentropyLoss : public Loss{

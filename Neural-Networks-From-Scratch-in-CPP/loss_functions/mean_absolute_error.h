@@ -12,6 +12,9 @@
 #include <numeric>
 #include <random>
 #include <omp.h>
+
+#include "loss_functions.h"
+
 using namespace std;
 
 // This function, used as a loss, penalizes the error linearly. It produces sparser results and is robust

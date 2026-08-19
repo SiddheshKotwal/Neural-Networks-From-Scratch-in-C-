@@ -12,6 +12,10 @@
 #include <numeric>
 #include <random>
 #include <omp.h>
+
+#include "calculate_accuracy.h"
+#include "../math_operations/numpy_operations.h"
+
 using namespace std;
 
 class Accuracy_Categorical : public Accuracy{

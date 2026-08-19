@@ -1,6 +1,19 @@
-#include "F:\Codes\Neural Networks From Scratch\Github Repo\Neural-Networks-From-Scratch-in-CPP\common_includes.h"
-#include <opencv2/opencv.hpp>
+#include "../Neural-Networks-From-Scratch-in-CPP/common_includes.h"
+
+#if defined(__has_include)
+#  if __has_include(<opencv2/opencv.hpp>)
+#    define NN_HAS_OPENCV 1
+#    include <opencv2/opencv.hpp>
+#  endif
+#endif
+
+#ifndef NN_HAS_OPENCV
+#  define NN_HAS_OPENCV 0
+#endif
+
+#if NN_HAS_OPENCV
 #include <filesystem>
+
 namespace fs = std::filesystem;
 
 void load_mnist_dataset(vector<vector<vector<double>>>& X, vector<double>& y, string dataset, string path){
@@ -43,3 +56,30 @@ void create_data_mnist(vector<vector<vector<double>>>& X, vector<vector<vector<d
     load_mnist_dataset(X, y, "train", path);
     load_mnist_dataset(X_test, y_test, "test", path);
 }
+
+#else
+
+void load_mnist_dataset(
+    vector<vector<vector<double>>>&,
+    vector<double>&,
+    string,
+    string
+) {
+    throw runtime_error(
+        "OpenCV is required to load the image dataset."
+    );
+}
+
+void create_data_mnist(
+    vector<vector<vector<double>>>&,
+    vector<vector<vector<double>>>&,
+    vector<double>&,
+    vector<double>&,
+    string
+) {
+    throw runtime_error(
+        "OpenCV is required to load the image dataset."
+    );
+}
+
+#endif

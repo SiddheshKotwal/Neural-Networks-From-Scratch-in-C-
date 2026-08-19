@@ -1,5 +1,16 @@
-#include "F:\Codes\Neural Networks From Scratch\Github Repo\Neural-Networks-From-Scratch-in-CPP\common_includes.h"
-#include <opencv2/opencv.hpp>
+#include "../Neural-Networks-From-Scratch-in-CPP/common_includes.h"
+
+#if defined(__has_include)
+#  if __has_include(<opencv2/opencv.hpp>)
+#    define NN_HAS_OPENCV 1
+#    include <opencv2/opencv.hpp>
+#  endif
+#endif
+
+#ifndef NN_HAS_OPENCV
+#  define NN_HAS_OPENCV 0
+#endif
+
 #include "get_dataset.cpp"
 #include "get_set_params.cpp"
 
@@ -9,6 +20,7 @@
 // ./run_my_plot (incase of use of matplotlibcpp) or
 // ./MyProgram.exe
 
+#if NN_HAS_OPENCV
 int main(){
 
     /*  // Predicting on test data
@@ -16,7 +28,7 @@ int main(){
         vector<double> y_test, y;
 
         // Data Loading
-        create_data_mnist(X, X_test, y, y_test, "F:\\Codes\\Neural Networks From Scratch\\Github Repo\\A Real Dataset\\fashion_mnist_images\\");
+        create_data_mnist(X, X_test, y, y_test, "../A Real Dataset/fashion_mnist_images/");
     */
 
     // To make predictions we need to convert the image data into data containing same properties as the image dataset used for training the model,
@@ -24,7 +36,7 @@ int main(){
     // So, we need to convert our data into grayscale and 28 x 28 resolution image and then scale the image data b/w -1 to 1 and flatten into 784 element array.
     // And make a vector of (number of samples, 784) for predictions.
     
-    cv::Mat image = cv::imread("F:\\Codes\\Neural Networks From Scratch\\Github Repo\\A Real Dataset\\tshirt.png", cv::IMREAD_GRAYSCALE);
+    cv::Mat image = cv::imread("../A Real Dataset/tshirt.png", cv::IMREAD_GRAYSCALE);
     cv::resize(image, image, cv::Size(28, 28));
     plt::imshow(image.data, image.rows, image.cols, 1, {{"cmap", "gray"}});
     plt::show();
@@ -75,7 +87,7 @@ int main(){
     layer_params.push_back(&dense3);
 
     vector<tuple<vector<vector<double>>, vector<vector<double>>>> parameters;
-    load_parameters(parameters, "F:/Codes/Neural Networks From Scratch/Github Repo/A Real Dataset/fashion_mnist.parms");
+    load_parameters(parameters, "../A Real Dataset/fashion_mnist.parms");
     set_parameters(layer_params, parameters);
     cout<<"parameters loaded successfully!\n";
 
@@ -141,3 +153,15 @@ int main(){
     // Because pixel values were very different, the model incorrectly put its “guess” in this case.
     // Convolutional layers may properly predict in this case, as-is.
 }
+
+#else
+
+int main() {
+    std::cerr
+        << "OpenCV is not installed; "
+        << "this example is disabled.\n";
+
+    return 0;
+}
+
+#endif

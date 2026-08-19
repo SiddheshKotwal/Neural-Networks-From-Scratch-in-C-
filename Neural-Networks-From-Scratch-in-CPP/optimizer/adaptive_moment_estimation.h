@@ -12,6 +12,9 @@
 #include <numeric>
 #include <random>
 #include <omp.h>
+
+#include "../Layers/dense_layer.h"
+
 using namespace std;
 
 class Optimizer_Adam{

@@ -11,7 +11,11 @@
 #include <algorithm>
 #include <numeric>
 #include <random>
+#include <tuple>
 #include <omp.h>
+
+#include "../math_operations/numpy_operations.h"
+
 using namespace std;
 
 // Dense Layer (Layer in which all neurons from previous / input layer are connected with all the neurons of current layer (eg. like complete graph))

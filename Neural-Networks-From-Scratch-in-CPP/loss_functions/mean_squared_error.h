@@ -12,6 +12,9 @@
 #include <numeric>
 #include <random>
 #include <omp.h>
+
+#include "loss_functions.h"
+
 using namespace std;
 
 // The two main methods for calculating error in regression are mean squared error (MSE) and mean absolute error (MAE).
